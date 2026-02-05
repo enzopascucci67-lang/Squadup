@@ -1,4 +1,4 @@
-import NextAuth, { type NextAuthOptions } from "next-auth";
+import NextAuth, { type Account, type NextAuthOptions, type Profile, type User } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import { prisma } from "@/lib/prisma";
 
@@ -10,7 +10,15 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({
+      user,
+      account,
+      profile,
+    }: {
+      user: User;
+      account: Account | null;
+      profile?: Profile | undefined;
+    }) {
       if (account?.provider !== "discord") return true;
       const discordId =
         account.providerAccountId || (profile as { id?: string })?.id;
