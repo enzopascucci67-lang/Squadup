@@ -10,15 +10,12 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({
-      user,
-      account,
-      profile,
-    }: {
+    async signIn(params: {
       user: User;
       account: Account | null;
       profile?: Profile | undefined;
     }) {
+      const { user, account, profile } = params;
       if (account?.provider !== "discord") return true;
       const discordId =
         account.providerAccountId || (profile as { id?: string })?.id;
