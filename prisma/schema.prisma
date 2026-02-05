@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  discordId String   @unique
+  name      String
+  image     String?
+  game      String?    // currently selected game
+  rank      String?    // currently selected rank
+  lastGame  String?    // NEW: last selected game
+  lastRank  String?    // NEW: last selected rank
+  platform  String?    // PC / Console
+  playstyle String?    // Competitive / Casual
+  region    String?    // NA / EU / LATAM / OCE / APAC / MENA
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sentRequests     TeammateRequest[] @relation("RequestSender")
+  receivedRequests TeammateRequest[] @relation("RequestReceiver")
+  ratingsGiven     Rating[]          @relation("RatingFrom")
+  ratingsReceived  Rating[]          @relation("RatingTo")
+}
+
+model TeammateRequest {
+  id          String   @id @default(cuid())
+  fromUserId  String
+  toUserId    String
+  createdAt   DateTime @default(now())
+
+  fromUser User @relation("RequestSender", fields: [fromUserId], references: [id])
+  toUser   User @relation("RequestReceiver", fields: [toUserId], references: [id])
+
+  @@index([fromUserId])
+  @@index([toUserId])
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  fromUserId String
+  toUserId   String
+  stars     Int
+  notes     String?
+  createdAt DateTime @default(now())
+
+  fromUser User @relation("RatingFrom", fields: [fromUserId], references: [id])
+  toUser   User @relation("RatingTo", fields: [toUserId], references: [id])
+
+  @@index([fromUserId])
+  @@index([toUserId])
+}
