@@ -10,6 +10,7 @@ Set these in your hosting platform:
 - `DISCORD_BOT_TOKEN`
 - `DISCORD_GUILD_ID`
 - `DATABASE_URL`
+- `DATABASE_AUTH_TOKEN` (for Turso/libsql)
 
 ## Prisma
 The `postinstall` script runs `prisma generate`. For migrations:
@@ -25,6 +26,13 @@ Make sure the bot is invited to the server with these permissions:
 - Send Messages
 - Read Message History
 - Manage Channels
+
+## Hosted Database (Turso recommended)
+1. Create a database in Turso.
+2. Copy the database URL and auth token.
+3. Set:
+   - `DATABASE_URL=libsql://...`
+   - `DATABASE_AUTH_TOKEN=...`
 
 ## Quick Test
 1. Log in.

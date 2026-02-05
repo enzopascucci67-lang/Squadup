@@ -10,7 +10,10 @@ if (!PrismaLibSQL) {
   throw new Error("Prisma LibSQL adapter not found");
 }
 
-const adapter = new PrismaLibSQL({ url: databaseUrl });
+const authToken = process.env.DATABASE_AUTH_TOKEN;
+const adapter = new PrismaLibSQL(
+  authToken ? { url: databaseUrl, authToken } : { url: databaseUrl }
+);
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
